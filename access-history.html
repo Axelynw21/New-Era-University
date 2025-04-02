@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Access History - NEU RFID System</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <nav class="top-nav">
+        <div class="nav-container">
+            <div class="logo-wrapper">
+                <img src="LOGO.png" alt="NEU Logo" class="small-logo">
+            </div>
+            <div class="nav-links">
+                <a href="dashboard.html" class="nav-item">
+                    <i class="fas fa-home"></i>
+                </a>
+                <a href="#" class="nav-item active">
+                    <i class="fas fa-history"></i>
+                    <span>Access History</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <div class="access-history">
+            <div class="history-header">
+                <h1>Gate Access History</h1>
+                <div class="search-bar">
+                    <input type="text" id="searchInput" placeholder="Search by RFID or time...">
+                    <i class="fas fa-search"></i>
+                </div>
+            </div>
+
+            <div class="history-filters">
+                <div class="date-filter">
+                    <input type="date" id="startDate">
+                    <span>to</span>
+                    <input type="date" id="endDate">
+                    <button onclick="filterByDate()" class="filter-btn">
+                        <i class="fas fa-filter"></i> Filter
+                    </button>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date & Time</th>
+                            <th>RFID Tag</th>
+                            <th>Status</th>
+                            <th>Gate</th>
+                        </tr>
+                    </thead>
+                    <tbody id="accessLogs">
+                        
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        
+        function addAccessLog(rfidTag, status) {
+            const logs = JSON.parse(localStorage.getItem('accessLogs') || '[]');
+            
+            logs.unshift({
+                timestamp: new Date().toISOString(),
+                rfidTag: rfidTag,
+                status: status,
+                gate: 'Main Gate'
+            });
+
+            
+            if (logs.length > 100) logs.pop();
+            
+            localStorage.setItem('accessLogs', JSON.stringify(logs));
+            loadAccessLogs();
+        }
+
+        // KAPAAGOD FR
+        function loadAccessLogs() {
+            const logs = JSON.parse(localStorage.getItem('accessLogs') || '[]');
+            const tbody = document.getElementById('accessLogs');
+            tbody.innerHTML = '';
+
+            logs.forEach(log => {
+                const row = document.createElement('tr');
+                const time = new Date(log.timestamp);
+                
+                row.innerHTML = `
+                    <td>${time.toLocaleString()}</td>
+                    <td>${log.rfidTag}</td>
+                    <td><span class="badge ${log.status.toLowerCase()}">${log.status}</span></td>
+                    <td>${log.gate}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const searchText = e.target.value.toLowerCase();
+            const rows = document.querySelectorAll('#accessLogs tr');
+
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(searchText) ? '' : 'none';
+            });
+        });
+
+      
+        function filterByDate() {
+            const startDate = new Date(document.getElementById('startDate').value);
+            const endDate = new Date(document.getElementById('endDate').value);
+            const rows = document.querySelectorAll('#accessLogs tr');
+
+            rows.forEach(row => {
+                const dateStr = row.cells[0].textContent;
+                const rowDate = new Date(dateStr);
+                
+                if (startDate && endDate) {
+                    row.style.display = (rowDate >= startDate && rowDate <= endDate) ? '' : 'none';
+                }
+            });
+        }
+
+       
+        window.onload = loadAccessLogs;
+
+       
+    </script>
+</body>
+</html> 

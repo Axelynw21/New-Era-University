@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vehicle Management - NEU RFID System</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <nav class="top-nav">
+        <div class="nav-container">
+            <div class="logo-wrapper">
+                <img src="LOGO.png" alt="NEU Logo" class="small-logo">
+            </div>
+            <div class="nav-links">
+                <a href="dashboard.html" class="nav-item">
+                    <i class="fas fa-home"></i>
+                </a>
+                <a href="#" class="nav-item active">
+                    <i class="fas fa-car"></i>
+                    <span>Vehicle Management</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <div class="vehicle-management">
+            <div class="management-header">
+                <h1>Vehicle Management</h1>
+                <div class="search-bar">
+                    <input type="text" id="searchInput" placeholder="Search vehicles...">
+                    <i class="fas fa-search"></i>
+                </div>
+            </div>
+
+            <div class="table-controls">
+                <div class="filter-group">
+                    <select id="filterAffiliation">
+                        <option value="">All Affiliations</option>
+                        <option value="student">Student</option>
+                        <option value="staff">Staff</option>
+                        <option value="guardian">Guardian</option>
+                    </select>
+                </div>
+                <div class="sort-group">
+                    <select id="sortBy">
+                        <option value="name">Sort by Name</option>
+                        <option value="date">Sort by Date</option>
+                        <option value="plate">Sort by Plate Number</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table id="vehicleTable">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Gender</th>
+                            <th>Age</th>
+                            <th>Affiliation</th>
+                            <th>Car Details</th>
+                            <th>Plate Number</th>
+                            <th>Registration Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="vehicleTableBody">
+                        
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Edit Vehicle Details</h2>
+            <form id="editForm">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="editName" required>
+                </div>
+                <div class="form-group">
+                    <label>Car Make and Model</label>
+                    <input type="text" id="editCarName" required>
+                </div>
+                <div class="form-group">
+                    <label>Plate Number</label>
+                    <input type="text" id="editPlateNumber" required>
+                </div>
+                <button type="submit" class="save-btn">Save Changes</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        
+        function loadVehicles() {
+            const vehicles = JSON.parse(localStorage.getItem('rfidRegistrations') || '[]');
+            const tableBody = document.getElementById('vehicleTableBody');
+            tableBody.innerHTML = '';
+
+            vehicles.forEach((vehicle, index) => {
+                const row = document.createElement('tr');
+                const date = new Date(vehicle.registrationDate).toLocaleDateString();
+                
+                row.innerHTML = `
+                    <td>${vehicle.fullName}</td>
+                    <td>${vehicle.gender}</td>
+                    <td>${vehicle.age}</td>
+                    <td>${vehicle.affiliation}</td>
+                    <td>${vehicle.carName}</td>
+                    <td>${vehicle.plateNumber}</td>
+                    <td>${date}</td>
+                    <td class="actions">
+                        <button onclick="editVehicle(${index})" class="edit-btn">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button onclick="deleteVehicle(${index})" class="delete-btn">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+       
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const searchText = e.target.value.toLowerCase();
+            const rows = document.querySelectorAll('#vehicleTableBody tr');
+
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(searchText) ? '' : 'none';
+            });
+        });
+
+       
+        document.getElementById('filterAffiliation').addEventListener('change', function(e) {
+            const affiliation = e.target.value.toLowerCase();
+            const rows = document.querySelectorAll('#vehicleTableBody tr');
+
+            rows.forEach(row => {
+                if (!affiliation) {
+                    row.style.display = '';
+                    return;
+                }
+                const rowAffiliation = row.children[3].textContent.toLowerCase();
+                row.style.display = rowAffiliation === affiliation ? '' : 'none';
+            });
+        });
+
+        
+        document.getElementById('sortBy').addEventListener('change', function(e) {
+            const vehicles = JSON.parse(localStorage.getItem('rfidRegistrations') || '[]');
+            const sortBy = e.target.value;
+
+            vehicles.sort((a, b) => {
+                switch(sortBy) {
+                    case 'name':
+                        return a.fullName.localeCompare(b.fullName);
+                    case 'date':
+                        return new Date(b.registrationDate) - new Date(a.registrationDate);
+                    case 'plate':
+                        return a.plateNumber.localeCompare(b.plateNumber);
+                    default:
+                        return 0;
+                }
+            });
+
+            localStorage.setItem('rfidRegistrations', JSON.stringify(vehicles));
+            loadVehicles();
+        });
+
+       
+        function deleteVehicle(index) {
+            if (confirm('Are you sure you want to delete this vehicle registration?')) {
+                const vehicles = JSON.parse(localStorage.getItem('rfidRegistrations') || '[]');
+                vehicles.splice(index, 1);
+                localStorage.setItem('rfidRegistrations', JSON.stringify(vehicles));
+                loadVehicles();
+            }
+        }
+
+       
+        function editVehicle(index) {
+            const vehicles = JSON.parse(localStorage.getItem('rfidRegistrations') || '[]');
+            const vehicle = vehicles[index];
+            const modal = document.getElementById('editModal');
+            
+            document.getElementById('editName').value = vehicle.fullName;
+            document.getElementById('editCarName').value = vehicle.carName;
+            document.getElementById('editPlateNumber').value = vehicle.plateNumber;
+            
+            modal.style.display = 'block';
+            
+            document.getElementById('editForm').onsubmit = function(e) {
+                e.preventDefault();
+                
+                vehicles[index] = {
+                    ...vehicle,
+                    fullName: document.getElementById('editName').value,
+                    carName: document.getElementById('editCarName').value,
+                    plateNumber: document.getElementById('editPlateNumber').value
+                };
+                
+                localStorage.setItem('rfidRegistrations', JSON.stringify(vehicles));
+                modal.style.display = 'none';
+                loadVehicles();
+            };
+        }
+
+        
+        document.querySelector('.close-modal').onclick = function() {
+            document.getElementById('editModal').style.display = 'none';
+        }
+
+        
+        window.onload = loadVehicles;
+    </script>
+</body>
+</html> 

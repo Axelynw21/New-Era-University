@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - NEU </title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        
+        <nav class="sidebar">
+            <div class="logo-wrapper">
+                <img src="LOGO.png" alt="NEU Logo" class="small-logo">
+            </div>
+            <div class="nav-items">
+                <a href="#" class="nav-item active">
+                    <i class="fas fa-home"></i>
+                </a>
+                <a href="rfid-system.html" class="nav-item">
+                    <i class="fas fa-id-card"></i>
+                </a>
+                <a href="index.html" class="nav-item">
+                    <i class="fas fa-sign-out-alt"></i>
+                </a>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <h1 class="welcome-title">Welcome to NEU RFID</h1>
+            <p class="welcome-subtitle">Access your student services and information</p>
+
+            <div class="cards-container">
+                <a href="rfid-system.html" class="card">
+                    <div class="card-content">
+                        <h2>RFID Registration</h2>
+                        <p>Register for vehicle RFID sticker</p>
+                        <i class="fas fa-car card-icon"></i>
+                    </div>
+                </a>
+
+                
+                <a href="vehicle-management.html" class="card">
+                    <div class="card-content">
+                        <h2>Vehicle Management</h2>
+                        <p>Manage your registered vehicles</p>
+                        <i class="fas fa-cog card-icon"></i>
+                    </div>
+                </a>
+
+                
+                <a href="access-history.html" class="card">
+                    <div class="card-content">
+                        <h2>Access History</h2>
+                        <p>View your gate access history</p>
+                        <i class="fas fa-history card-icon"></i>
+                    </div>
+                </a>
+            </div>
+        </main>
+    </div>
+    <script>
+        
+        function checkLoginState() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            if (!isLoggedIn) {
+                
+                window.location.href = 'index.html';
+            }
+        }
+
+        
+        window.onload = checkLoginState;
+
+        
+        function handleLogout() {
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('username');
+            window.location.href = 'login.html';
+        }
+    </script>
+</body>
+</html> 

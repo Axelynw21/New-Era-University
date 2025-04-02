@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEU Portal Sign Up</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="signup-body">
+    <div class="signup-container">
+        <div class="signup-header">
+            <img src="LOGO.png" alt="NEU Logo" class="signup-logo">
+            <h2 class="neu-title">New Era University</h2>
+        </div>
+        <div class="signup-form">
+            <h1>Sign Up</h1>
+            <form id="signupForm" onsubmit="return handleSignup(event)">
+                <div class="form-group">
+                    <i class="fas fa-user"></i>
+                    <input type="text" id="fullName" placeholder="Full Name" required>
+                </div>
+                <div class="form-group">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" id="email" placeholder="Email Address" required>
+                </div>
+                <div class="form-group">
+                    <i class="fas fa-id-card"></i>
+                    <input type="text" id="studentId" placeholder="Student ID" required>
+                </div>
+                <div class="form-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="password" placeholder="Password" required>
+                </div>
+                <div class="form-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
+                </div>
+                <button type="submit" class="signup-btn">Sign Up</button>
+            </form>
+            <p class="login-text">
+                Already have an account? <a href="index.html">Login</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        function handleSignup(event) {
+            event.preventDefault();
+            
+            const fullName = document.getElementById('fullName').value;
+            const email = document.getElementById('email').value;
+            const studentId = document.getElementById('studentId').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (password !== confirmPassword) {
+                alert('Passwords do not match');
+                return false;
+            }
+
+        
+            const userData = {
+                fullName,
+                email,
+                studentId,
+                password: btoa(password) 
+            };
+
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            
+            if (users.some(user => user.email === email)) {
+                alert('Email already registered');
+                return false;
+            }
+
+            users.push(userData);
+            localStorage.setItem('users', JSON.stringify(users));
+
+            alert('Account created successfully!');
+            window.location.href = 'login.html';
+            return false;
+        }
+    </script>
+</body>
+</html> 

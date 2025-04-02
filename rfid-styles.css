@@ -1,0 +1,184 @@
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    line-height: 1.6;
+    background: #f5f5f5;
+    overflow-x: hidden;
+}
+
+
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: #003366;
+    padding: 10px 20px;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.nav-brand {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.nav-logo {
+    height: 40px;
+    width: auto;
+}
+
+.mobile-menu {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 5px 0;
+}
+
+.menu-item {
+    color: white;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 5px;
+    font-size: 0.9em;
+}
+
+.menu-item i {
+    font-size: 1.2em;
+    margin-bottom: 4px;
+}
+
+.menu-item.active {
+    color: #ff9900;
+}
+
+
+.mobile-container {
+    padding: 15px;
+    margin-top: 100px;
+}
+
+.rfid-content {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    padding: 20px;
+}
+
+
+.text-content {
+    margin-bottom: 20px;
+}
+
+.main-text {
+    color: #444;
+    font-size: 1.1em;
+    line-height: 1.8;
+    margin-bottom: 25px;
+    text-align: justify;
+}
+
+
+.image-content {
+    margin: 20px -20px -20px;
+}
+
+.image-content img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+
+.register-now-btn {
+    background: linear-gradient(45deg, #ff9900, #ff7700);
+    color: white;
+    border: none;
+    width: 100%;
+    padding: 15px;
+    font-size: 1.1em;
+    border-radius: 25px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 15px rgba(255, 153, 0, 0.3);
+    margin: 20px 0;
+}
+
+.register-now-btn:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 8px rgba(255, 153, 0, 0.3);
+}
+
+
+@media screen and (min-width: 768px) {
+    .mobile-container {
+        max-width: 1200px;
+        margin: 120px auto 40px;
+        padding: 0 40px;
+    }
+
+    .rfid-content {
+        display: flex;
+        gap: 40px;
+        padding: 40px;
+    }
+
+    .text-content {
+        flex: 1;
+        margin-bottom: 0;
+    }
+
+    .image-content {
+        flex: 1;
+        margin: 0;
+    }
+
+    .image-content img {
+        border-radius: 10px;
+    }
+
+    .main-text {
+        font-size: 1.2em;
+    }
+
+    .register-now-btn {
+        width: auto;
+        padding: 18px 45px;
+        font-size: 1.2em;
+    }
+}
+
+
+@media (hover: hover) {
+    .menu-item:hover {
+        color: #ff9900;
+    }
+
+    .register-now-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(255, 153, 0, 0.4);
+        background: linear-gradient(45deg, #ff7700, #ff5500);
+    }
+}
+
+
+.logo {
+    width: 30px;
+    height: auto;
+} 
